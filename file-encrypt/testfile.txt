@@ -1,0 +1,18 @@
+this is a test file for the golang project file encrypter
+
+check the source, if not exists  throw error
+
+derived the key
+    |
+aes cipher
+    |
+cipher block
+    |
+galois counter 
+
+
+
+the decrypt function
+
+open, check , read, salt  
+

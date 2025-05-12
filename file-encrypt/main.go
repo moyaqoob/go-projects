@@ -3,17 +3,19 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 	"bytes"
-
 	"golang.org/x/term"
+	"file-encrypt/filecrypt"
 )
+
 
 func main(){
 	if len(os.Args) < 2{
 		printHelp()
 	}
-	function := os.Args[0]
+
+	
+	function := os.Args[1]
 	switch function{
 	case "help":
 		printHelp();
@@ -26,15 +28,12 @@ func main(){
 		fmt.Println("Run encrypt to encrypt a file and decrypt to decrypt a file")
 		os.Exit(1)
 	}
-	
-
 }
 
 
 func printHelp() {
     helpMessage := `
 Usage: [COMMAND] [OPTIONS]
-
 Commands:
   encrypt   Encrypt a file or text.
             Usage: encrypt [input] [output]
@@ -48,14 +47,14 @@ Commands:
             Usage: help
             Example: help
 
-Options:
+ Options:
   -k, --key    Specify a key for encryption or decryption.
                Example: go run . encrypt <fileName>
 
-Notes:
-  - Ensure you use the same key for encryption and decryption.
-  - Supported file formats: .txt, .json, etc.
-  - For any issues, contact support@example.com.
+	Notes:
+	- Ensure you use the same key for encryption and decryption.
+	- Supported file formats: .txt, .json, etc.
+	- For any issues, contact support@example.com.
 `
     fmt.Println(helpMessage)
 }
@@ -70,10 +69,28 @@ func encryptHandle(){
 	if !validateFile(file){
 		panic("File not found")
 	}
-
+	password := getPassword()
+	println("\nEncrypting")
+	filecrypt.Encrypt(file,password)	
+	fmt.Println("\n file successfully protected")
 }
 
+
+
 func decryptHandle(){
+	if len(os.Args) < 3 {
+		println("missing the path to the file. For more info, run go run . help")
+	}
+
+	file := os.Args[2]
+	if !validateFile(file){
+		panic("File not found")
+	}
+
+	password := getPassword()
+	fmt.Println("decrypting, please wait ")
+	filecrypt.Decrypt(file,password)
+	fmt.Println("\n file decrypted successfully");
 
 }
 
@@ -88,14 +105,12 @@ func getPassword()[]byte{
 		fmt.Println("\n Passwords doesnt match")
 		return getPassword()
 	}
-
 	return password
-
-
 }
 
 //validate the password and its checks
 func validatePassword(password[] byte,confirmPassword []byte)bool{
+	
 	if !bytes.Equal(password,confirmPassword){
 		return false
 	}
@@ -109,7 +124,6 @@ func validateFile(file string)bool{
 	os.IsNotExist(err){
 		return false
 	}
-
 	return true
 }
 
