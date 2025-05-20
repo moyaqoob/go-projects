@@ -62,6 +62,7 @@ func Encrypt(source string, password []byte) {
 	}
 }
 
+
 func Decrypt(file string, password []byte) {
 	if _, err := os.Stat(file); os.IsNotExist(err) {
 		panic("file does not exist")
@@ -112,6 +113,7 @@ func Decrypt(file string, password []byte) {
 		panic(err.Error())
 	}
 }
+
 
 //how to encrypt
 //read the file. then add the key to it,
